@@ -1,6 +1,5 @@
 use clap::Parser;
-use template::{Opts, SubCommand, process_csv};
-
+use template::{Opts, SubCommand, gen_pass, process_csv};
 fn main() -> anyhow::Result<()> {
     let opts: Opts = Opts::parse();
     match opts.sub {
@@ -9,6 +8,16 @@ fn main() -> anyhow::Result<()> {
                 .output
                 .unwrap_or_else(|| format!("output.{}", csv_opts.format));
             process_csv(&csv_opts.input, &output, csv_opts.format)?;
+            Ok(())
+        }
+        SubCommand::GenPass(gen_pass_opts) => {
+            let _ = gen_pass(
+                gen_pass_opts.length,
+                gen_pass_opts.upper_case,
+                gen_pass_opts.lower_case,
+                gen_pass_opts.number,
+                gen_pass_opts.symbol,
+            );
             Ok(())
         }
     }
